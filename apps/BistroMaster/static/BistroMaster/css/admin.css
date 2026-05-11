@@ -1,0 +1,13 @@
+/* BistroMaster - Django admin theme tweaks */
+
+:root {
+  --bistromaster-primary: #0f766e;
+}
+
+html[data-theme="light"], :root {
+  --primary: var(--bistromaster-primary);
+}
+
+#header {
+  background: var(--bistromaster-primary);
+}

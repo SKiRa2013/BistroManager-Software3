@@ -1,0 +1,517 @@
+<section class="bm-section" data-section="Configuración" hidden>
+    <p class="bm-muted bm-section-subtitle">Gestiona administradores y el estado del restaurante.</p>
+
+    <div class="bm-conf-view" data-conf-view="overview">
+        <div class="bm-cards bm-conf-cards">
+            <article class="bm-card bm-conf-card">
+                <div class="bm-card-head">
+                    <div class="bm-card-title">Administrador actual</div>
+                    <button type="button" class="bm-btn bm-btn-ghost bm-btn-xs" data-conf-edit-admin>Editar</button>
+                </div>
+
+                <div class="bm-conf-body">
+                    <div class="bm-conf-row">
+                        <div class="bm-conf-label">Correo</div>
+                        <div class="bm-conf-value" data-conf-admin-correo>—</div>
+                    </div>
+                    <div class="bm-conf-row">
+                        <div class="bm-conf-label">Usuario</div>
+                        <div class="bm-conf-value" data-conf-admin-usuario>—</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="bm-card bm-conf-card">
+                <div class="bm-card-head">
+                    <div class="bm-card-title">Restaurante</div>
+                    <button type="button" class="bm-btn bm-btn-ghost bm-btn-xs" data-conf-edit-restaurant>Editar</button>
+                </div>
+
+                <div class="bm-conf-body">
+                    <div class="bm-conf-row">
+                        <div class="bm-conf-label">Estado</div>
+                        <div class="bm-conf-value">
+                            <span class="bm-badge" data-conf-restaurant-badge>—</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="bm-conf-danger">
+            <button type="button" class="bm-btn bm-btn-danger" data-conf-delete-account>
+                Eliminar cuenta de administrador
+            </button>
+            <p class="bm-muted bm-conf-danger-note">
+                Esta acción es permanente.
+            </p>
+        </div>
+    </div>
+
+    <div class="bm-conf-view" data-conf-view="admin_edit" hidden>
+        <div class="bm-conf-head">
+            <button type="button" class="bm-btn bm-btn-ghost bm-btn-back" data-conf-back>
+                &lt; Volver
+            </button>
+            <div class="bm-conf-head-title">
+                <div class="bm-conf-kicker">Editar administrador</div>
+                <div class="bm-muted bm-conf-subtitle">La contraseña es opcional (solo si deseas cambiarla).</div>
+            </div>
+        </div>
+
+        <form class="bm-form" data-conf-admin-edit-form>
+            <div class="bm-form-grid bm-conf-form-grid">
+                <label class="bm-field">
+                    <span class="bm-field-label">Correo</span>
+                    <input class="bm-input" type="email" name="correo" placeholder="correo@dominio.com" required>
+                </label>
+                <label class="bm-field">
+                    <span class="bm-field-label">Nombre de usuario</span>
+                    <input class="bm-input" type="text" name="usuario" placeholder="usuario" required>
+                </label>
+                <label class="bm-field">
+                    <span class="bm-field-label">Nueva contraseña</span>
+                    <input class="bm-input" type="password" name="contrasena" placeholder="Nueva contraseña">
+                </label>
+                <label class="bm-field">
+                    <span class="bm-field-label">Confirmar contraseña</span>
+                    <input class="bm-input" type="password" name="confirmar_contrasena" placeholder="Repite la contraseña">
+                </label>
+            </div>
+
+            <div class="bm-form-actions">
+                <div></div>
+                <div class="bm-form-actions-right">
+                    <button type="button" class="bm-btn bm-btn-soft" data-conf-cancel>Cancelar</button>
+                    <button type="submit" class="bm-btn bm-btn-primary">Guardar</button>
+                </div>
+            </div>
+            <p class="bm-form-error" data-conf-error hidden></p>
+        </form>
+    </div>
+
+    <div class="bm-conf-view" data-conf-view="admin_add" hidden>
+        <div class="bm-conf-head">
+            <button type="button" class="bm-btn bm-btn-ghost bm-btn-back" data-conf-back>
+                &lt; Volver
+            </button>
+            <div class="bm-conf-head-title">
+                <div class="bm-conf-kicker">Agregar administrador</div>
+                <div class="bm-muted bm-conf-subtitle">Primero valida el correo con un código.</div>
+            </div>
+        </div>
+
+        <form class="bm-form" data-conf-admin-add-form>
+            <div class="bm-form-grid bm-conf-form-grid">
+                <label class="bm-field">
+                    <span class="bm-field-label">Correo</span>
+                    <input class="bm-input" type="email" name="correo" placeholder="correo@dominio.com" required>
+                </label>
+                <div class="bm-field bm-conf-inline">
+                    <span class="bm-field-label">&nbsp;</span>
+                    <button type="button" class="bm-btn bm-btn-ghost" data-conf-send-code>Enviar código</button>
+                </div>
+
+                <label class="bm-field bm-conf-step" data-conf-step hidden>
+                    <span class="bm-field-label">Código</span>
+                    <input class="bm-input" type="text" name="code" inputmode="numeric" maxlength="6" placeholder="Ej: 123456">
+                </label>
+
+                <label class="bm-field bm-conf-step" data-conf-step hidden>
+                    <span class="bm-field-label">Nombre de usuario</span>
+                    <input class="bm-input" type="text" name="usuario" placeholder="usuario">
+                </label>
+                <label class="bm-field bm-conf-step" data-conf-step hidden>
+                    <span class="bm-field-label">Contraseña</span>
+                    <input class="bm-input" type="password" name="contrasena" placeholder="Contraseña segura">
+                </label>
+                <label class="bm-field bm-conf-step" data-conf-step hidden>
+                    <span class="bm-field-label">Confirmar contraseña</span>
+                    <input class="bm-input" type="password" name="confirmar_contrasena" placeholder="Repite la contraseña">
+                </label>
+            </div>
+
+            <div class="bm-form-actions">
+                <div></div>
+                <div class="bm-form-actions-right">
+                    <button type="button" class="bm-btn bm-btn-soft" data-conf-cancel>Cancelar</button>
+                    <button type="submit" class="bm-btn bm-btn-primary" data-conf-create-btn hidden>Crear administrador</button>
+                </div>
+            </div>
+            <p class="bm-form-error" data-conf-error hidden></p>
+        </form>
+    </div>
+
+    <div class="bm-conf-view" data-conf-view="restaurant_edit" hidden>
+        <div class="bm-conf-head">
+            <button type="button" class="bm-btn bm-btn-ghost bm-btn-back" data-conf-back>
+                &lt; Volver
+            </button>
+            <div class="bm-conf-head-title">
+                <div class="bm-conf-kicker">Estado del restaurante</div>
+                <div class="bm-muted bm-conf-subtitle">Abierto o cerrado.</div>
+            </div>
+        </div>
+
+        <form class="bm-form" data-conf-restaurant-form>
+            <div class="bm-form-grid bm-conf-form-grid">
+                <label class="bm-field">
+                    <span class="bm-field-label">Estado</span>
+                    <select class="bm-input" name="estado" required>
+                        <option value="open">Abierto</option>
+                        <option value="closed">Cerrado</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="bm-form-actions">
+                <div></div>
+                <div class="bm-form-actions-right">
+                    <button type="button" class="bm-btn bm-btn-soft" data-conf-cancel>Cancelar</button>
+                    <button type="submit" class="bm-btn bm-btn-primary">Guardar</button>
+                </div>
+            </div>
+            <p class="bm-form-error" data-conf-error hidden></p>
+        </form>
+    </div>
+
+    <div class="bm-conf-view" data-conf-view="admin_delete" hidden>
+        <div class="bm-conf-head">
+            <button type="button" class="bm-btn bm-btn-ghost bm-btn-back" data-conf-back>
+                &lt; Volver
+            </button>
+            <div class="bm-conf-head-title">
+                <div class="bm-conf-kicker">Eliminar cuenta</div>
+                <div class="bm-muted bm-conf-subtitle">Confirma tu contraseña para continuar.</div>
+            </div>
+        </div>
+
+        <form class="bm-form" data-conf-delete-form>
+            <div class="bm-form-grid bm-conf-form-grid">
+                <label class="bm-field">
+                    <span class="bm-field-label">Contraseña</span>
+                    <input class="bm-input" type="password" name="contrasena" placeholder="Contraseña" required>
+                </label>
+            </div>
+
+            <div class="bm-form-actions">
+                <div></div>
+                <div class="bm-form-actions-right">
+                    <button type="button" class="bm-btn bm-btn-soft" data-conf-cancel>Cancelar</button>
+                    <button type="submit" class="bm-btn bm-btn-danger">Eliminar</button>
+                </div>
+            </div>
+            <p class="bm-form-error" data-conf-error hidden></p>
+        </form>
+    </div>
+
+    <script>
+      (function () {
+        const section = document.querySelector('.bm-section[data-section="Configuración"]');
+        if (!section) return;
+
+        const state = {
+          admin: null,
+          restaurant: null,
+        };
+
+        function getCookie(name) {
+          const value = document.cookie || "";
+          const parts = value.split(";").map((p) => p.trim());
+          for (const p of parts) {
+            if (p.startsWith(name + "=")) return decodeURIComponent(p.slice(name.length + 1));
+          }
+          return "";
+        }
+
+        async function api(url, options) {
+          const csrftoken = getCookie("csrftoken");
+          const resp = await fetch(url, {
+            ...options,
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+              ...(options && options.headers ? options.headers : {}),
+            },
+          });
+
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok || data.ok === false) {
+            const msg = data.error || "Error inesperado";
+            throw new Error(msg);
+          }
+          return data;
+        }
+
+        function setView(name) {
+          section.querySelectorAll("[data-conf-view]").forEach((v) => {
+            const matches = v.getAttribute("data-conf-view") === name;
+            if (matches) v.removeAttribute("hidden");
+            else v.setAttribute("hidden", "hidden");
+          });
+          setError("");
+        }
+
+        function setError(message) {
+          section.querySelectorAll("[data-conf-error]").forEach((el) => {
+            if (!message) {
+              el.setAttribute("hidden", "hidden");
+              el.textContent = "";
+            } else {
+              el.textContent = message;
+              el.removeAttribute("hidden");
+            }
+          });
+        }
+
+        function renderOverview() {
+          const correo = section.querySelector("[data-conf-admin-correo]");
+          const usuario = section.querySelector("[data-conf-admin-usuario]");
+          const badge = section.querySelector("[data-conf-restaurant-badge]");
+
+          if (correo) correo.textContent = (state.admin && state.admin.correo) ? state.admin.correo : "—";
+          if (usuario) usuario.textContent = (state.admin && state.admin.usuario) ? state.admin.usuario : "—";
+
+          if (badge) {
+            const open = !!(state.restaurant && state.restaurant.is_open);
+            badge.classList.toggle("is-on", open);
+            badge.classList.toggle("is-off", !open);
+            badge.textContent = open ? "Abierto" : "Cerrado";
+          }
+        }
+
+        async function loadConfig() {
+          const data = await api("/admin/configuracion/", { method: "GET" });
+          state.admin = data.admin;
+          state.restaurant = data.restaurante;
+          renderOverview();
+        }
+
+        function showAddSteps(enabled) {
+          section.querySelectorAll("[data-conf-step]").forEach((el) => {
+            if (enabled) el.removeAttribute("hidden");
+            else el.setAttribute("hidden", "hidden");
+          });
+          const btn = section.querySelector("[data-conf-create-btn]");
+          if (btn) {
+            if (enabled) btn.removeAttribute("hidden");
+            else btn.setAttribute("hidden", "hidden");
+          }
+        }
+
+        section.addEventListener("click", function (e) {
+          if (e.target.closest("[data-conf-back]") || e.target.closest("[data-conf-cancel]")) {
+            setView("overview");
+            showAddSteps(false);
+            return;
+          }
+
+          if (e.target.closest("[data-conf-edit-admin]")) {
+            const form = section.querySelector("[data-conf-admin-edit-form]");
+            if (form && state.admin) {
+              form.elements.correo.value = state.admin.correo || "";
+              form.elements.usuario.value = state.admin.usuario || "";
+              form.elements.contrasena.value = "";
+              form.elements.confirmar_contrasena.value = "";
+            }
+            setView("admin_edit");
+            return;
+          }
+
+          if (e.target.closest("[data-conf-edit-restaurant]")) {
+            const form = section.querySelector("[data-conf-restaurant-form]");
+            if (form) {
+              form.elements.estado.value = (state.restaurant && state.restaurant.is_open) ? "open" : "closed";
+            }
+            setView("restaurant_edit");
+            return;
+          }
+
+          const sendBtn = e.target.closest("[data-conf-send-code]");
+          if (sendBtn) {
+            const form = section.querySelector("[data-conf-admin-add-form]");
+            if (!form) return;
+            const correo = form.elements.correo.value.trim();
+            if (!correo) return;
+            setError("");
+            (async function () {
+              try {
+                await api("/admin/admins/send-code/", { method: "POST", body: JSON.stringify({ correo }) });
+                showAddSteps(true);
+              } catch (err) {
+                setError(err.message || "No se pudo enviar el código");
+              }
+            })();
+            return;
+          }
+
+          if (e.target.closest("[data-conf-delete-account]")) {
+            const form = section.querySelector("[data-conf-delete-form]");
+            if (form) form.reset();
+            setView("admin_delete");
+            return;
+          }
+        });
+
+        const editForm = section.querySelector("[data-conf-admin-edit-form]");
+        if (editForm) {
+          editForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const correo = editForm.elements.correo.value.trim();
+            const usuario = editForm.elements.usuario.value.trim();
+            const contrasena = editForm.elements.contrasena.value;
+            const confirmar = editForm.elements.confirmar_contrasena.value;
+            if (!correo || !usuario) return;
+
+            if (!contrasena && confirmar) {
+              setError("Confirma la contraseña solo si vas a cambiarla.");
+              return;
+            }
+            if (contrasena && (!confirmar || confirmar !== contrasena)) {
+              setError("Las contraseñas no coinciden.");
+              return;
+            }
+
+            setError("");
+            (async function () {
+              try {
+                await api("/admin/admin/profile/", {
+                  method: "PUT",
+                  body: JSON.stringify({ correo, usuario, contrasena, contrasena_confirm: confirmar }),
+                });
+                await loadConfig();
+                setView("overview");
+              } catch (err) {
+                setError(err.message || "No se pudo guardar");
+              }
+            })();
+          });
+        }
+
+        const addForm = section.querySelector("[data-conf-admin-add-form]");
+        if (addForm) {
+          addForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const correo = addForm.elements.correo.value.trim();
+            const code = (addForm.elements.code.value || "").trim();
+            const usuario = (addForm.elements.usuario.value || "").trim();
+            const contrasena = addForm.elements.contrasena.value || "";
+            const confirmar = addForm.elements.confirmar_contrasena.value || "";
+            if (!correo) {
+              setError("Escribe el correo para continuar.");
+              return;
+            }
+            if (!code) {
+              setError("Te falta poner el código de verificación.");
+              return;
+            }
+            if (!usuario) {
+              setError("Te falta poner el nombre de usuario.");
+              return;
+            }
+            if (!contrasena) {
+              setError("Te falta poner la contraseña.");
+              return;
+            }
+
+            if (!confirmar || confirmar !== contrasena) {
+              setError("Las contraseñas no coinciden.");
+              return;
+            }
+
+            setError("");
+            (async function () {
+              try {
+                await api("/admin/admins/create/", {
+                  method: "POST",
+                  body: JSON.stringify({ correo, code, usuario, contrasena, contrasena_confirm: confirmar }),
+                });
+                await loadConfig();
+                showAddSteps(false);
+                setView("overview");
+              } catch (err) {
+                setError(err.message || "No se pudo crear");
+              }
+            })();
+          });
+        }
+
+        const restForm = section.querySelector("[data-conf-restaurant-form]");
+        if (restForm) {
+          restForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const is_open = restForm.elements.estado.value === "open";
+            setError("");
+            (async function () {
+              try {
+                const data = await api("/admin/restaurante/", {
+                  method: "PUT",
+                  body: JSON.stringify({ is_open }),
+                });
+                state.restaurant = data.restaurante;
+                renderOverview();
+                setView("overview");
+              } catch (err) {
+                setError(err.message || "No se pudo guardar");
+              }
+            })();
+          });
+        }
+
+        document.addEventListener("bm:config:add_admin", function () {
+          const form = section.querySelector("[data-conf-admin-add-form]");
+          if (form) {
+            form.reset();
+            showAddSteps(false);
+          }
+          setView("admin_add");
+        });
+
+        document.addEventListener("bm:config:edit_admin", function () {
+          const form = section.querySelector("[data-conf-admin-edit-form]");
+          if (form && state.admin) {
+            form.elements.correo.value = state.admin.correo || "";
+            form.elements.usuario.value = state.admin.usuario || "";
+            form.elements.contrasena.value = "";
+            form.elements.confirmar_contrasena.value = "";
+          }
+          setView("admin_edit");
+        });
+
+        const deleteForm = section.querySelector("[data-conf-delete-form]");
+        if (deleteForm) {
+          deleteForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const contrasena = deleteForm.elements.contrasena.value || "";
+            if (!contrasena) {
+              setError("Te falta poner la contraseña.");
+              return;
+            }
+            setError("");
+            (async function () {
+              try {
+                const data = await api("/admin/admin/delete/", {
+                  method: "POST",
+                  body: JSON.stringify({ contrasena }),
+                });
+                if (data.redirect) window.location.href = data.redirect;
+                else window.location.href = "/admin/";
+              } catch (err) {
+                setError(err.message || "No se pudo eliminar");
+              }
+            })();
+          });
+        }
+
+        (async function init() {
+          try {
+            await loadConfig();
+          } catch (err) {
+            setError(err.message || "No se pudo cargar la configuración");
+          }
+          setView("overview");
+          showAddSteps(false);
+        })();
+      })();
+    </script>
+</section>

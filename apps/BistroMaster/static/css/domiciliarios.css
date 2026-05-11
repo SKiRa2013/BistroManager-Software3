@@ -1,0 +1,7 @@
+/* BistroMaster - Domiciliarios (same UI as Meseros) */
+
+.bm-dom-table th:nth-child(4),
+.bm-dom-table td:nth-child(4) {
+  width: clamp(110px, 18%, 150px);
+}
+

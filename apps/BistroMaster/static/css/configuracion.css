@@ -1,0 +1,87 @@
+/* BistroMaster - Configuración */
+
+.bm-conf-cards {
+  grid-template-columns: 1fr;
+}
+
+/* keep stacked (no side-by-side) */
+
+.bm-conf-body {
+  padding: 14px;
+}
+
+.bm-conf-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.bm-conf-row:last-child {
+  border-bottom: none;
+}
+
+.bm-conf-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7a2a2a;
+  font-weight: 900;
+}
+
+.bm-conf-value {
+  color: #222;
+  font-weight: 800;
+}
+
+.bm-conf-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 14px;
+}
+
+.bm-conf-head-title {
+  flex: 1;
+  text-align: right;
+}
+
+.bm-conf-kicker {
+  font-weight: 900;
+  color: #222;
+}
+
+.bm-conf-subtitle {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.bm-form-grid.bm-conf-form-grid {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 980px) {
+  .bm-form-grid.bm-conf-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bm-conf-inline {
+  align-content: end;
+}
+
+.bm-conf-danger {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  display: grid;
+  gap: 8px;
+}
+
+.bm-conf-danger-note {
+  font-size: 13px;
+}

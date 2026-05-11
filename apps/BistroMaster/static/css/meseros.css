@@ -1,0 +1,188 @@
+/* BistroMaster - Meseros (demo UI) */
+
+.bm-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.bm-btn-ghost {
+  background: rgba(224, 52, 52, 0.10);
+  color: #b51f1f;
+  font-weight: 700;
+}
+
+.bm-btn-ghost:hover {
+  background: rgba(224, 52, 52, 0.16);
+}
+
+.bm-btn-primary {
+  background: #e03434;
+  color: #fff;
+  font-weight: 800;
+}
+
+.bm-btn-primary:hover {
+  background: #c92a2a;
+}
+
+.bm-btn-soft {
+  background: rgba(0, 0, 0, 0.06);
+  color: #222;
+  font-weight: 700;
+}
+
+.bm-btn-soft:hover {
+  background: rgba(0, 0, 0, 0.09);
+}
+
+.bm-btn-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #8a1b1b;
+  font-weight: 900;
+  border: 1px solid rgba(239, 68, 68, 0.18);
+}
+
+.bm-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.18);
+}
+
+.bm-btn-xs {
+  padding: 8px 10px;
+  font-size: 13px;
+  border-radius: 10px;
+}
+
+.bm-center {
+  text-align: center;
+}
+
+.bm-emp-table th:nth-child(4),
+.bm-emp-table td:nth-child(4) {
+  width: clamp(110px, 18%, 150px);
+}
+
+.bm-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.bm-badge.is-on {
+  background: rgba(16, 185, 129, 0.16);
+  color: #0f6a4c;
+  border-color: rgba(16, 185, 129, 0.22);
+}
+
+.bm-badge.is-off {
+  background: rgba(239, 68, 68, 0.12);
+  color: #8a1b1b;
+  border-color: rgba(239, 68, 68, 0.18);
+}
+
+/* Form view */
+
+.bm-emp-form-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 14px;
+}
+
+.bm-btn-back {
+  white-space: nowrap;
+}
+
+.bm-emp-form-title {
+  flex: 1;
+  text-align: right;
+}
+
+.bm-emp-form-kicker {
+  font-weight: 900;
+  color: #222;
+}
+
+.bm-emp-form-subtitle {
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+.bm-form {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(224, 52, 52, 0.03);
+}
+
+.bm-form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (min-width: 980px) {
+  .bm-form-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.bm-field {
+  display: grid;
+  gap: 6px;
+}
+
+.bm-field-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7a2a2a;
+  font-weight: 900;
+}
+
+.bm-input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  padding: 12px 12px;
+  font-size: 15px;
+  background: #fff;
+}
+
+.bm-input:focus {
+  outline: none;
+  border: 1px solid rgba(224, 52, 52, 0.60);
+  box-shadow: 0px 0px 0px 4px rgba(224, 52, 52, 0.10);
+}
+
+.bm-form-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bm-form-actions-right {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.bm-form-error {
+  margin-top: 10px;
+  color: #8a1b1b;
+  font-weight: 800;
+  font-size: 13px;
+}
