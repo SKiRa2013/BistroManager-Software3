@@ -1,0 +1,27 @@
+{% extends "BistroMaster/base_site.html" %}
+
+{% block content %}
+<div class="bm-menu-publico">
+    <h1>Menú de {{ restaurante.nombre }}</h1>
+    <div class="bm-productos-grid">
+        {% for prod in productos %}
+            <div class="bm-producto-card">
+                <h3>{{ prod.nombre }}</h3>
+                <p>{{ prod.precio }}</p>
+                <button onclick="agregarAlPedido('{{ prod.id|escapejs }}')">Agregar</button>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    async function checkStatus() {
+        const response = await fetch('/admin/configuracion/');
+        const data = await response.json();
+        if (!data.is_open) {
+            window.location.reload(); // Recarga y muestra el mensaje de cierre
+        }
+    }
+    setInterval(checkStatus, 60000); // Chequea cada minuto
+</script>
+{% endblock %}

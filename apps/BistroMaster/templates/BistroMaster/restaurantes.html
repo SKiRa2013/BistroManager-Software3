@@ -1,0 +1,37 @@
+<section class="bm-section" data-section="Restaurante" hidden>
+    <p class="bm-muted bm-section-subtitle">Configuración operativa del restaurante.</p>
+
+    <div class="bm-card">
+        <div class="bm-card-head">
+            <div class="bm-card-title">Estado del servicio</div>
+        </div>
+        <div class="bm-conf-body">
+            <div class="bm-conf-row">
+                <div class="bm-conf-label">El restaurante está:</div>
+                <div class="bm-conf-value" id="status-text">Cargando...</div>
+            </div>
+            <button class="bm-btn" id="btn-toggle-status" onclick="toggleRestaurante()">
+                Cambiar Estado
+            </button>
+        </div>
+    </div>
+
+    <script>
+        async function loadRestauranteStatus() {
+            const data = await api("/admin/configuracion/", { method: "GET" });
+            const statusText = document.getElementById("status-text");
+            statusText.textContent = data.is_open ? "🟢 Abierto" : "🔴 Cerrado";
+        }
+
+        async function toggleRestaurante() {
+            const currentStatus = document.getElementById("status-text").textContent.includes("Abierto");
+            await api("/admin/configuracion/", { 
+                method: "POST", 
+                body: JSON.stringify({ is_open: !currentStatus }) 
+            });
+            loadRestauranteStatus();
+        }
+
+        loadRestauranteStatus();
+    </script>
+</section>

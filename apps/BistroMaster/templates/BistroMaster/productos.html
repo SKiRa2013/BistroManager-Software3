@@ -1,0 +1,53 @@
+<section class="bm-section" data-section="Productos" hidden>
+    <p class="bm-muted bm-section-subtitle">Gestiona tu inventario de productos.</p>
+
+    <div class="bm-prod-view" data-prod-view="list">
+        <button class="bm-btn" onclick="openProdForm('add')">+ Nuevo Producto</button>
+        <div class="bm-table-wrap">
+            <table class="bm-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th class="bm-center">Stock</th>
+                        <th class="bm-center">¿Disponible?</th>
+                        <th class="bm-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody data-prod-tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bm-prod-view" data-prod-view="form" hidden>
+        <form class="bm-form" data-prod-form>
+            <input type="text" name="nombre" placeholder="Nombre del producto" required>
+            <input type="number" name="precio" placeholder="Precio" required>
+            <input type="number" name="stock" placeholder="Stock inicial" required>
+            <label>
+                <input type="checkbox" name="disponible" checked> ¿Disponible?
+            </label>
+            <button type="submit">Guardar Producto</button>
+            <button type="button" onclick="setView('list')">Cancelar</button>
+        </form>
+    </div>
+
+    <script>
+        // Lógica de carga
+        async function loadProductos() {
+            const data = await api("/admin/productos/", { method: "GET" });
+            const tbody = document.querySelector("[data-prod-tbody]");
+            tbody.innerHTML = data.productos.map(p => `
+                <tr>
+                    <td>${p.nombre}</td>
+                    <td>${p.precio}</td>
+                    <td class="bm-center">${p.stock}</td>
+                    <td class="bm-center">${p.is_available ? '✅' : '❌'}</td>
+                    <td class="bm-right"><button onclick="editProd(${p.id})">Editar</button></td>
+                </tr>
+            `).join("");
+        }
+        
+        loadProductos();
+    </script>
+</section>
