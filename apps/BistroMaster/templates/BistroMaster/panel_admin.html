@@ -1,0 +1,208 @@
+{% extends "BistroMaster/base_site.html" %}
+{% load static %}
+
+{% block title %}Panel | BistroMaster{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/pedidos.css' %}">
+<link rel="stylesheet" href="{% static 'css/meseros.css' %}">
+<link rel="stylesheet" href="{% static 'css/domiciliarios.css' %}">
+<link rel="stylesheet" href="{% static 'css/configuracion.css' %}">
+{% endblock %}
+
+{% block header_right %}
+<div class="bm-user">
+    <button
+        type="button"
+        class="bm-user-btn"
+        id="bmUserBtn"
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="bmUserMenu"
+        title="{{ admin.usuario }}"
+    >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12Z" stroke="white" stroke-width="2"/>
+            <path d="M4 20a8 8 0 0 1 16 0" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </button>
+
+    <div class="bm-user-menu" id="bmUserMenu" role="menu" aria-hidden="true">
+        <button type="button" role="menuitem" data-action="edit">Editar</button>
+        <a role="menuitem" href="{% url 'admin_logout' %}">Cerrar sesión</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="bm-app">
+    <aside class="bm-sidebar">
+        <div class="bm-sidebar-title">Opciones</div>
+        <ul class="bm-nav" id="bmNav">
+            <li><button type="button" class="is-active" data-section="Pedidos">Pedidos</button></li>
+            <li><button type="button" data-section="Tiqueteras">Tiqueteras</button></li>
+            <li><button type="button" data-section="Domicilios">Domicilios</button></li>
+            <li><button type="button" data-section="Usuarios">Usuarios</button></li>
+            <li><button type="button" data-section="Meseros">Meseros</button></li>
+            <li><button type="button" data-section="Domiciliarios">Domiciliarios</button></li>
+            <li><button type="button" data-section="Inventario">Inventario</button></li>
+            <li><button type="button" data-section="Configuración">Configuración</button></li>
+        </ul>
+    </aside>
+
+    <main class="bm-main">
+        <div class="bm-main-head">
+            <h2 id="bmSectionTitle">Pedidos</h2>
+            <button type="button" class="bm-btn bm-btn-ghost" id="bmPrimaryAction" hidden>
+                —
+            </button>
+        </div>
+
+        {% include "BistroMaster/pedidos.html" %}
+
+        <section class="bm-section" data-section="Tiqueteras" hidden>
+            <p class="bm-muted">Aquí irán las opciones de Tiqueteras.</p>
+        </section>
+        <section class="bm-section" data-section="Domicilios" hidden>
+            <p class="bm-muted">Aquí irán las opciones de Domicilios.</p>
+        </section>
+        <section class="bm-section" data-section="Usuarios" hidden>
+            <p class="bm-muted">Aquí irán las opciones de Usuarios.</p>
+        </section>
+        {% include "BistroMaster/meseros.html" %}
+        {% include "BistroMaster/domiciliarios.html" %}
+        <section class="bm-section" data-section="Inventario" hidden>
+            <p class="bm-muted">Aquí irán las opciones de Inventario.</p>
+        </section>
+        {% include "BistroMaster/configuracion.html" %}
+        <section class="bm-section" data-section="Editar" hidden>
+            <p class="bm-muted">Aquí irán las opciones para editar.</p>
+        </section>
+    </main>
+</div>
+
+<script>
+  (function () {
+    const userBtn = document.getElementById("bmUserBtn");
+    const userMenu = document.getElementById("bmUserMenu");
+
+    function closeUserMenu() {
+      userMenu.setAttribute("aria-hidden", "true");
+      userBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleUserMenu() {
+      const isHidden = userMenu.getAttribute("aria-hidden") !== "false";
+      userMenu.setAttribute("aria-hidden", isHidden ? "false" : "true");
+      userBtn.setAttribute("aria-expanded", isHidden ? "true" : "false");
+    }
+
+    userBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      toggleUserMenu();
+    });
+
+    document.addEventListener("click", function () {
+      closeUserMenu();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeUserMenu();
+    });
+
+    const nav = document.getElementById("bmNav");
+    const titleEl = document.getElementById("bmSectionTitle");
+    const primaryActionBtn = document.getElementById("bmPrimaryAction");
+    const sections = Array.from(document.querySelectorAll(".bm-section[data-section]"));
+
+    function showSection(name) {
+      sections.forEach((s) => {
+        const matches = s.getAttribute("data-section") === name;
+        if (matches) s.removeAttribute("hidden");
+        else s.setAttribute("hidden", "hidden");
+      });
+    }
+
+    function setSection(name) {
+      titleEl.textContent = name;
+      if (primaryActionBtn) {
+        if (name === "Meseros") {
+          primaryActionBtn.textContent = "Agregar mesero";
+          primaryActionBtn.removeAttribute("hidden");
+          primaryActionBtn.setAttribute("data-action", "add_mesero");
+        } else if (name === "Domiciliarios") {
+          primaryActionBtn.textContent = "Agregar domiciliario";
+          primaryActionBtn.removeAttribute("hidden");
+          primaryActionBtn.setAttribute("data-action", "add_domiciliario");
+        } else if (name === "Configuración") {
+          primaryActionBtn.textContent = "Agregar administrador";
+          primaryActionBtn.removeAttribute("hidden");
+          primaryActionBtn.setAttribute("data-action", "add_admin");
+        } else {
+          primaryActionBtn.setAttribute("hidden", "hidden");
+          primaryActionBtn.removeAttribute("data-action");
+        }
+      }
+      showSection(name);
+
+      nav.querySelectorAll("button").forEach((b) => b.classList.remove("is-active"));
+      const selector = 'button[data-section="' + CSS.escape(name) + '"]';
+      const active = nav.querySelector(selector);
+      if (active) active.classList.add("is-active");
+    }
+
+    if (primaryActionBtn) {
+      primaryActionBtn.addEventListener("click", function () {
+        const action = primaryActionBtn.getAttribute("data-action");
+        if (action === "add_mesero") {
+          document.dispatchEvent(new CustomEvent("bm:meseros:add"));
+        } else if (action === "add_domiciliario") {
+          document.dispatchEvent(new CustomEvent("bm:domiciliarios:add"));
+        } else if (action === "add_admin") {
+          document.dispatchEvent(new CustomEvent("bm:config:add_admin"));
+        }
+      });
+    }
+
+    nav.addEventListener("click", function (e) {
+      const btn = e.target.closest("button[data-section]");
+      if (!btn) return;
+      setSection(btn.getAttribute("data-section"));
+    });
+
+    userMenu.addEventListener("click", function (e) {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const action = btn.getAttribute("data-action");
+      if (action === "edit") {
+        setSection("Configuración");
+        document.dispatchEvent(new CustomEvent("bm:config:edit_admin"));
+      }
+      closeUserMenu();
+    });
+
+    function formatCop(value) {
+      return new Intl.NumberFormat("es-CO").format(value);
+    }
+
+    function calcOrders() {
+      document.querySelectorAll("table[data-orders]").forEach((table) => {
+        let total = 0;
+        table.querySelectorAll("tr.bm-item").forEach((row) => {
+          const qty = Number(row.getAttribute("data-qty") || 0);
+          const unit = Number(row.getAttribute("data-unit") || 0);
+          const price = qty * unit;
+          total += price;
+          const priceCell = row.querySelector(".bm-price");
+          if (priceCell) priceCell.textContent = formatCop(price);
+        });
+        const totalCell = table.querySelector(".bm-total-value");
+        if (totalCell) totalCell.textContent = formatCop(total);
+      });
+    }
+
+    calcOrders();
+    showSection("Pedidos");
+  })();
+</script>
+{% endblock %}

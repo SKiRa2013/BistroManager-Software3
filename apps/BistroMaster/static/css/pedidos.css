@@ -1,0 +1,243 @@
+/* BistroMaster admin panel UI (layout, sidebar, tables) */
+
+.bm-user {
+  position: relative;
+}
+
+.bm-user-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.18);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.bm-user-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.bm-user-menu {
+  position: absolute;
+  right: 0;
+  top: 48px;
+  width: 180px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.18);
+  padding: 8px;
+  display: none;
+}
+
+.bm-user-menu[aria-hidden="false"] {
+  display: block;
+}
+
+.bm-user-menu a,
+.bm-user-menu button {
+  width: 100%;
+  display: block;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 10px 10px;
+  border-radius: 10px;
+  color: #222;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.bm-user-menu a:hover,
+.bm-user-menu button:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.bm-app {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 0 16px;
+  display: flex;
+  gap: 16px;
+}
+
+.bm-sidebar {
+  width: 260px;
+  flex: 0 0 260px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 14px;
+  height: calc(100vh - 80px - 48px);
+  position: sticky;
+  top: 104px;
+  overflow: auto;
+}
+
+.bm-sidebar-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #555;
+  margin: 6px 8px 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.bm-nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bm-nav button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #222;
+  padding: 12px 12px;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.bm-nav button:hover {
+  background: rgba(224, 52, 52, 0.08);
+}
+
+.bm-nav button.is-active {
+  background: rgba(224, 52, 52, 0.14);
+  color: #b51f1f;
+  font-weight: 700;
+}
+
+.bm-main {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.08);
+  padding: 22px;
+  min-height: calc(100vh - 80px - 48px);
+}
+
+.bm-main-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.bm-main h2 {
+  margin-bottom: 0;
+  color: #222;
+}
+
+.bm-muted {
+  color: #666;
+}
+
+.bm-section-subtitle {
+  margin-bottom: 14px;
+}
+
+/* Cards + tables for Pedidos */
+
+.bm-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 980px) {
+  .bm-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.bm-card {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.bm-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.bm-card-title {
+  font-weight: 800;
+  color: #222;
+}
+
+.bm-card-meta {
+  color: #666;
+  font-size: 13px;
+}
+
+.bm-table-wrap {
+  overflow: visible;
+}
+
+.bm-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.bm-table th,
+.bm-table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 14px;
+  color: #222;
+  vertical-align: top;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.bm-table th:nth-child(2),
+.bm-table td:nth-child(2) {
+  width: clamp(90px, 18%, 120px);
+}
+
+.bm-table th:nth-child(3),
+.bm-table td:nth-child(3) {
+  width: clamp(110px, 22%, 150px);
+}
+
+.bm-table th {
+  font-size: 13px;
+  color: #7a2a2a;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(224, 52, 52, 0.06); /* lighter than sidebar active (0.14) */
+  position: sticky;
+  top: 0;
+}
+
+.bm-right {
+  text-align: right;
+}
+
+.bm-total-label {
+  font-weight: 800;
+  color: #333;
+}
+
+.bm-total-value {
+  font-weight: 900;
+  color: #b51f1f;
+}

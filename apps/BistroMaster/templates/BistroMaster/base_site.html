@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BistroMaster{% endblock %}</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <header class="bm-header">
+        <div class="bm-header-inner">
+            <div class="logo-container">
+                <img src="/media/logo.png" alt="Logo del restaurante">
+            </div>
+
+            <div class="bm-header-right">
+                {% block header_right %}{% endblock %}
+            </div>
+        </div>
+    </header>
+
+    {% block content %}{% endblock %}
+
+</body>
+</html>
