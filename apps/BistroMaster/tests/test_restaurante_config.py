@@ -7,13 +7,12 @@ from apps.BistroMaster.models import Administrador
 class RestauranteConfigTests(TestCase):
     def setUp(self):
         self.admin = Administrador.objects.create(usuario="admin_cfg", contrasena="123")
-        # Forzamos sesión
         session = self.client.session
         session['admin_id'] = self.admin.id
         session.save()
         self.config = RestauranteConfig.objects.create(is_open=True)
 
-    def test_cp15_restaurante_abierto(self):
+    def test_cp28_restaurante_abierto(self):
         """Prueba de restaurante abierto (HU-04)"""
         url = reverse('restaurante_config_api')
         payload = {"is_open": True}
@@ -25,7 +24,7 @@ class RestauranteConfigTests(TestCase):
         self.assertTrue(self.config.is_open)
         self.assertEqual(response.json()['restaurante']['is_open'], True)
 
-    def test_cp16_restaurante_cerrado(self):
+    def test_cp29_restaurante_cerrado(self):
         """Prueba de restaurante cerrado (HU-04)"""
         url = reverse('restaurante_config_api')
         payload = {"is_open": False}

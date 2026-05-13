@@ -16,7 +16,7 @@ class GestionUsuariosTests(TestCase):
         session['admin_id'] = self.admin.id
         session.save()
 
-    def test_cp05_crear_mesero_valido(self):
+    def test_cp08_crear_mesero_valido(self):
         """Prueba de crear mesero válido (HU-02 / Positiva)"""
         url = reverse('meseros_api')
         payload = {
@@ -38,7 +38,7 @@ class GestionUsuariosTests(TestCase):
         self.assertTrue(Mesero.objects.filter(usuario="juanito").exists())
         self.assertEqual(response.json()['ok'], True)
 
-    def test_cp06_crear_domiciliario_valido(self):
+    def test_cp09_crear_domiciliario_valido(self):
         """Prueba de crear domiciliario válido (HU-02 / Positiva)"""
         url = reverse('domiciliarios_api')
         payload = {
@@ -60,7 +60,7 @@ class GestionUsuariosTests(TestCase):
         self.assertEqual(response.json()['ok'], True)
     
     
-    def test_cp07_campos_incompletos_mesero(self):
+    def test_cp10_campos_incompletos_mesero(self):
         """Prueba de campos incompletos (HU-02 / Negativa)"""
         url = reverse('meseros_api')
         payload = {
@@ -79,7 +79,7 @@ class GestionUsuariosTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("Faltan campos", response.json()['error'])
 
-    def test_cp08_campos_incompletos_domiciliario(self):
+    def test_cp11_campos_incompletos_domiciliario(self):
         """Prueba de campos incompletos domiciliario (HU-02 / Validación)"""
         url = reverse('domiciliarios_api')
         payload = {
@@ -95,16 +95,22 @@ class GestionUsuariosTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("Faltan campos", response.json()['error'])
     
-    def test_cp09_crear_domiciliario_valido(self):
-        """Prueba de crear domiciliario (HU-03 / Positiva)"""
-        url = reverse('domiciliarios_api')
+    def test_cp12_usuario_duplicado_mesero(self):
+        """Prueba de usuario duplicado mesero (HU-02 / Negativa)"""
+        Mesero.objects.create(
+            nombre="Original",
+            usuario="duplicado_user",
+            contrasena="123",
+            tipo_contrato="Tiempo completo"
+        )
+        
+        url = reverse('meseros_api')
         payload = {
-            "nombre": "Pedro Domicilios",
-            "usuario": "pedrito",
-            "contrasena": "Pass123!",
-            "contrasena_confirm": "Pass123!",
-            "contrato": "Por horas",
-            "disponible": True
+            "nombre": "Copia",
+            "usuario": "duplicado_user",
+            "contrasena": "456",
+            "contrasena_confirm": "456",
+            "contrato": "Medio tiempo"
         }
         
         response = self.client.post(
@@ -113,10 +119,10 @@ class GestionUsuariosTests(TestCase):
             content_type="application/json"
         )
         
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(Domiciliario.objects.filter(usuario="pedrito").exists())
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("Ya existe un mesero con ese usuario", response.json()['error'])
 
-    def test_cp10_usuario_duplicado_domiciliario(self):
+    def test_cp13_usuario_duplicado_domiciliario(self):
         """Prueba de usuario duplicado domiciliario (HU-02 / Negativa)"""
         Domiciliario.objects.create(
             nombre="Original",
@@ -143,7 +149,80 @@ class GestionUsuariosTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn("Ya existe un domiciliario con ese usuario", response.json()['error'])
 
-    def test_cp11_desactivar_mesero(self):
+    def test_edicion_mesero_completa(self):
+        """Pruebas de editar campos de mesero (CP-14, CP-15, CP-16, CP-17)"""
+        m = Mesero.objects.create(
+            nombre="Original", usuario="user_orig", 
+            tipo_contrato="Medio tiempo", disponible=True
+        )
+        url = reverse('mesero_api', kwargs={'mesero_id': m.id})
+        
+        payload = {
+            "nombre": "Nombre Editado",       
+            "usuario": "user_editado",       
+            "contrasena": "NuevaContra123!",  
+            "contrasena_confirm": "NuevaContra123!",
+            "contrato": "Tiempo completo",   
+            "disponible": True
+        }
+        
+        response = self.client.put(url, data=json.dumps(payload), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        
+        m.refresh_from_db()
+        self.assertEqual(m.nombre, "Nombre Editado")
+        self.assertEqual(m.usuario, "user_editado")
+        self.assertEqual(m.tipo_contrato, "Tiempo completo")
+
+    def test_cp18_eliminar_mesero(self):
+        """Prueba de eliminar mesero (CP-18)"""
+        m = Mesero.objects.create(
+            nombre="A Eliminar", usuario="borrar_me", tipo_contrato="Tiempo completo"
+        )
+        url = reverse('mesero_api', kwargs={'mesero_id': m.id})
+        response = self.client.delete(url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Mesero.objects.filter(id=m.id).exists())
+
+    def test_edicion_domiciliario_completa(self):
+        """Pruebas de editar campos de domiciliario (CP-19, CP-20, CP-21, CP-22)"""
+        d = Domiciliario.objects.create(
+            nombre="Domi Orig", usuario="domi_orig", 
+            tipo_contrato="Por horas", disponible=True
+        )
+        url = reverse('domiciliario_api', kwargs={'domiciliario_id': d.id})
+        
+        payload = {
+            "nombre": "Domi Editado",
+            "usuario": "domi_nuevo",
+            "contrasena": "DomiPass456!",
+            "contrasena_confirm": "DomiPass456!",
+            "contrato": "Prestación de servicios",
+            "disponible": True
+        }
+        
+        response = self.client.put(url, data=json.dumps(payload), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        
+        d.refresh_from_db()
+        self.assertEqual(d.nombre, "Domi Editado")
+        self.assertEqual(d.usuario, "domi_nuevo")
+    
+
+    def test_cp23_eliminar_domiciliario(self):
+        """Prueba de eliminar domiciliario (CP-23)"""
+        d = Domiciliario.objects.create(
+            nombre="Domi Eliminar", usuario="borrar_dom", tipo_contrato="Por horas"
+        )
+        url = reverse('domiciliario_api', kwargs={'domiciliario_id': d.id})
+        
+        response = self.client.delete(url)
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Domiciliario.objects.filter(id=d.id).exists())
+    
+    def test_cp24_desactivar_mesero(self):
         """Prueba de desactivar mesero (HU-03)"""
         m = Mesero.objects.create(
             nombre="Mesero Activo", usuario="mes_act", 
@@ -167,16 +246,14 @@ class GestionUsuariosTests(TestCase):
         self.assertFalse(m.disponible)
         
         
-    def test_cp12_desactivar_domiciliario(self):
+    def test_cp25_desactivar_domiciliario(self):
         """Prueba de desactivar domiciliario (HU-03)"""
-        # Creamos uno activo (disponible=True)
         d = Domiciliario.objects.create(
             nombre="Domi Activo", usuario="domi_act", 
             tipo_contrato="Por horas", disponible=True
         )
         url = reverse('domiciliario_api', kwargs={'domiciliario_id': d.id})
         
-        # Enviamos disponible: False para desactivarlo
         payload = {
             "nombre": d.nombre,
             "usuario": d.usuario,
@@ -192,7 +269,7 @@ class GestionUsuariosTests(TestCase):
         d.refresh_from_db() 
         self.assertFalse(d.disponible)
 
-    def test_cp13_activar_mesero(self):
+    def test_cp26_activar_mesero(self):
         """Prueba de activar mesero (HU-03)"""
         m = Mesero.objects.create(
             nombre="Mesero Inactivo", usuario="mes_in", 
@@ -211,7 +288,7 @@ class GestionUsuariosTests(TestCase):
         m.refresh_from_db()
         self.assertTrue(m.disponible)
 
-    def test_cp14_activar_domiciliario(self):
+    def test_cp27_activar_domiciliario(self):
         """Prueba de activar domiciliario (HU-03)"""
         d = Domiciliario.objects.create(
             nombre="Domi Inactivo", usuario="domi_in", 
