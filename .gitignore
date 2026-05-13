@@ -1,4 +1,7 @@
 .venv/**
+venv/**
 frontend/static/**
 db.sqlite3
 pyvenv.cfg
+__pycache__/
+*.pyc

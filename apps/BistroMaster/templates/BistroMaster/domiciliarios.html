@@ -1,0 +1,338 @@
+<section class="bm-section" data-section="Domiciliarios" hidden>
+    <p class="bm-muted bm-section-subtitle">Listado de domiciliarios para agregar/editar.</p>
+
+    <div class="bm-emp-view" data-dom-view="list">
+        <div class="bm-table-wrap">
+            <table class="bm-table bm-dom-table" data-dom-table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo de contrato</th>
+                        <th class="bm-center">Disponible</th>
+                        <th class="bm-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody data-dom-tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="bm-emp-view" data-dom-view="form" hidden>
+        <div class="bm-emp-form-head">
+            <button type="button" class="bm-btn bm-btn-ghost bm-btn-back" data-dom-back>
+                &lt; Volver
+            </button>
+            <div class="bm-emp-form-title">
+                <div class="bm-emp-form-kicker" data-dom-form-kicker>—</div>
+                <div class="bm-muted bm-emp-form-subtitle">Completa los datos y guarda.</div>
+            </div>
+        </div>
+
+        <form class="bm-form" data-dom-form>
+            <div class="bm-form-grid">
+                <label class="bm-field">
+                    <span class="bm-field-label">Nombre</span>
+                    <input class="bm-input" type="text" name="nombre" placeholder="Nombre del domiciliario" required>
+                </label>
+
+                <label class="bm-field">
+                    <span class="bm-field-label">Nombre de usuario</span>
+                    <input class="bm-input" type="text" name="usuario" placeholder="Usuario para iniciar sesión" required>
+                </label>
+
+                <label class="bm-field">
+                    <span class="bm-field-label">Contraseña</span>
+                    <input class="bm-input" type="password" name="contrasena" placeholder="Contraseña (crear o cambiar)">
+                </label>
+
+                <label class="bm-field">
+                    <span class="bm-field-label">Confirmar contraseña</span>
+                    <input class="bm-input" type="password" name="confirmar_contrasena" placeholder="Repite la contraseña">
+                </label>
+
+                <label class="bm-field">
+                    <span class="bm-field-label">Tipo de contrato</span>
+                    <select class="bm-input" name="contrato" required>
+                        <option value="" selected disabled>Selecciona…</option>
+                        <option value="Tiempo completo">Tiempo completo</option>
+                        <option value="Medio tiempo">Medio tiempo</option>
+                        <option value="Por horas">Por horas</option>
+                        <option value="Prestación de servicios">Prestación de servicios</option>
+                    </select>
+                </label>
+
+                <label class="bm-field">
+                    <span class="bm-field-label">Disponible</span>
+                    <select class="bm-input" name="disponible" required>
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="bm-form-actions">
+                <button type="button" class="bm-btn bm-btn-danger" data-dom-delete hidden>Eliminar</button>
+                <div class="bm-form-actions-right">
+                    <button type="button" class="bm-btn bm-btn-soft" data-dom-cancel>Cancelar</button>
+                    <button type="submit" class="bm-btn bm-btn-primary">Guardar</button>
+                </div>
+            </div>
+            <p class="bm-form-error" data-dom-error hidden></p>
+        </form>
+    </div>
+
+    <script>
+      (function () {
+        const section = document.querySelector('.bm-section[data-section="Domiciliarios"]');
+        if (!section) return;
+
+        const state = {
+          employees: [],
+          editingId: null,
+        };
+
+        function getCookie(name) {
+          const value = document.cookie || "";
+          const parts = value.split(";").map((p) => p.trim());
+          for (const p of parts) {
+            if (p.startsWith(name + "=")) return decodeURIComponent(p.slice(name.length + 1));
+          }
+          return "";
+        }
+
+        async function api(url, options) {
+          const csrftoken = getCookie("csrftoken");
+          const resp = await fetch(url, {
+            ...options,
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+              ...(options && options.headers ? options.headers : {}),
+            },
+          });
+
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok || data.ok === false) {
+            const msg = data.error || "Error inesperado";
+            throw new Error(msg);
+          }
+          return data;
+        }
+
+        function setView(name) {
+          section.querySelectorAll("[data-dom-view]").forEach((v) => {
+            const matches = v.getAttribute("data-dom-view") === name;
+            if (matches) v.removeAttribute("hidden");
+            else v.setAttribute("hidden", "hidden");
+          });
+        }
+
+        function setError(message) {
+          const el = section.querySelector("[data-dom-error]");
+          if (!el) return;
+          if (!message) {
+            el.setAttribute("hidden", "hidden");
+            el.textContent = "";
+            return;
+          }
+          el.textContent = message;
+          el.removeAttribute("hidden");
+        }
+
+        function badge(available) {
+          const span = document.createElement("span");
+          span.className = "bm-badge " + (available ? "is-on" : "is-off");
+          span.textContent = available ? "Sí" : "No";
+          return span;
+        }
+
+        function renderTable() {
+          const tbody = section.querySelector("[data-dom-tbody]");
+          if (!tbody) return;
+          tbody.innerHTML = "";
+
+          state.employees.forEach((emp) => {
+            const tr = document.createElement("tr");
+
+            const tdName = document.createElement("td");
+            tdName.textContent = emp.nombre;
+
+            const tdContract = document.createElement("td");
+            tdContract.textContent = emp.contrato;
+
+            const tdAvail = document.createElement("td");
+            tdAvail.className = "bm-center";
+            tdAvail.appendChild(badge(emp.disponible));
+
+            const tdActions = document.createElement("td");
+            tdActions.className = "bm-right";
+            const editBtn = document.createElement("button");
+            editBtn.type = "button";
+            editBtn.className = "bm-btn bm-btn-ghost bm-btn-xs";
+            editBtn.textContent = "Editar";
+            editBtn.setAttribute("data-dom-edit", String(emp.id));
+            tdActions.appendChild(editBtn);
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdContract);
+            tr.appendChild(tdAvail);
+            tr.appendChild(tdActions);
+            tbody.appendChild(tr);
+          });
+        }
+
+        function openForm(mode, employee) {
+          const form = section.querySelector("[data-dom-form]");
+          const kicker = section.querySelector("[data-dom-form-kicker]");
+          const delBtn = section.querySelector("[data-dom-delete]");
+          if (!form || !kicker) return;
+
+          setError("");
+
+          if (mode === "add") {
+            state.editingId = null;
+            kicker.textContent = "Agregar domiciliario";
+            form.reset();
+            form.elements.nombre.value = "";
+            form.elements.usuario.value = "";
+            form.elements.contrasena.value = "";
+            form.elements.confirmar_contrasena.value = "";
+            form.elements.contrato.value = "";
+            form.elements.disponible.value = "true";
+            if (delBtn) delBtn.setAttribute("hidden", "hidden");
+          } else {
+            state.editingId = employee.id;
+            kicker.textContent = "Editar domiciliario";
+            form.elements.nombre.value = employee.nombre;
+            form.elements.usuario.value = employee.usuario || "";
+            form.elements.contrasena.value = "";
+            form.elements.confirmar_contrasena.value = "";
+            form.elements.contrato.value = employee.contrato;
+            form.elements.disponible.value = employee.disponible ? "true" : "false";
+            if (delBtn) delBtn.removeAttribute("hidden");
+          }
+
+          setView("form");
+        }
+
+        function closeForm() {
+          state.editingId = null;
+          setError("");
+          setView("list");
+        }
+
+        section.addEventListener("click", function (e) {
+          const edit = e.target.closest("[data-dom-edit]");
+          if (edit) {
+            const id = Number(edit.getAttribute("data-dom-edit"));
+            const employee = state.employees.find((x) => x.id === id);
+            if (employee) openForm("edit", employee);
+          }
+
+          if (e.target.closest("[data-dom-back]") || e.target.closest("[data-dom-cancel]")) {
+            closeForm();
+          }
+
+          const del = e.target.closest("[data-dom-delete]");
+          if (del) {
+            const id = state.editingId;
+            if (!id) return;
+            (async function () {
+              try {
+                await api("/admin/domiciliarios/" + id + "/", { method: "DELETE" });
+                await loadEmployees();
+                closeForm();
+              } catch (err) {
+                setError(err.message || "No se pudo eliminar");
+              }
+            })();
+          }
+        });
+
+        const form = section.querySelector("[data-dom-form]");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const nombre = form.elements.nombre.value.trim();
+            const usuario = form.elements.usuario.value.trim();
+            const contrasena = form.elements.contrasena.value;
+            const confirmar = form.elements.confirmar_contrasena.value;
+            const contrato = form.elements.contrato.value;
+            const disponible = form.elements.disponible.value === "true";
+            if (!nombre || !usuario || !contrato) return;
+
+            if (!state.editingId) {
+              if (!contrasena) return;
+              if (!confirmar || confirmar !== contrasena) {
+                setError("Las contraseñas no coinciden.");
+                return;
+              }
+            } else {
+              if (!contrasena && confirmar) {
+                setError("Confirma la contraseña solo si vas a cambiarla.");
+                return;
+              }
+              if (contrasena && (!confirmar || confirmar !== contrasena)) {
+                setError("Las contraseñas no coinciden.");
+                return;
+              }
+            }
+
+            setError("");
+            (async function () {
+              try {
+                if (state.editingId) {
+                  await api("/admin/domiciliarios/" + state.editingId + "/", {
+                    method: "PUT",
+                    body: JSON.stringify({
+                      nombre,
+                      usuario,
+                      contrasena,
+                      contrasena_confirm: confirmar,
+                      contrato,
+                      disponible,
+                    }),
+                  });
+                } else {
+                  await api("/admin/domiciliarios/", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      nombre,
+                      usuario,
+                      contrasena,
+                      contrasena_confirm: confirmar,
+                      contrato,
+                      disponible,
+                    }),
+                  });
+                }
+                await loadEmployees();
+                closeForm();
+              } catch (err) {
+                setError(err.message || "No se pudo guardar");
+              }
+            })();
+          });
+        }
+
+        document.addEventListener("bm:domiciliarios:add", function () {
+          openForm("add");
+        });
+
+        async function loadEmployees() {
+          const data = await api("/admin/domiciliarios/", { method: "GET" });
+          state.employees = data.domiciliarios || [];
+          renderTable();
+        }
+
+        (async function init() {
+          try {
+            await loadEmployees();
+          } catch (err) {
+            setError(err.message || "No se pudieron cargar los domiciliarios");
+          }
+          setView("list");
+        })();
+      })();
+    </script>
+</section>

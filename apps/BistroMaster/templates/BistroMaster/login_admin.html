@@ -1,0 +1,36 @@
+{% extends "BistroMaster/base_site.html" %}
+
+{% block title %}Login | BistroMaster{% endblock %}
+
+{% block content %}
+    <div class="login-container">
+
+        <h1>Administrador</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text"
+                   name="usuario"
+                   placeholder="Nombre de usuario"
+                   required>
+
+            <input type="password"
+                   name="contrasena"
+                   placeholder="Contraseña"
+                   required>
+
+            <button type="submit">
+                Iniciar sesión
+            </button>
+
+            <a class="bm-forgot" href="{% url 'admin_forgot' %}">¿Olvidaste la contraseña?</a>
+
+            <p class="mensaje">
+                {{ mensaje }}
+            </p>
+
+        </form>
+
+    </div>
+{% endblock %}
